@@ -6,4 +6,7 @@ Now launch open your browser and type the following in the URl bar "http://local
 now upload your document and run 
 
 Also make sure you install the scikit module from your cmd using "pip install scikit-learn
+
+Update: Install the doc2txt library to be able to read .docx format file using "pip3 install docx2txt"
+
 "
