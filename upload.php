@@ -1,14 +1,28 @@
 <?php
 if(isset($_POST["submit"])) {
     $file_name = $_FILES['fileToUpload']['name'];
-    $file_size = $_FILES['fileToUpload']['size'];
-    $file_type = $_FILES['fileToUpload']['type'];
     $file_tmp = $_FILES["fileToUpload"]["tmp_name"];
+
     if ($file_tmp !== false) {
-        move_uploaded_file($file_tmp, 'C:/xampp/htdocs/plagiarism/' . $file_name);
+        // Change the upload directory to 'Database/'
+        move_uploaded_file($file_tmp, 'C:/xampp/htdocs/plagiarism/Database/' . $file_name);
 
         $path = "C:/xampp/htdocs/plagiarism/sss.py";
-        $api = shell_exec("python $path 2>&1");
+
+        $file_extension = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        $file_text = "";
+
+        if ($file_extension === 'pdf') {
+            $command = "pdftotext -layout C:/xampp/htdocs/plagiarism/Database/$file_name -";
+            $file_text = shell_exec($command);
+        } elseif ($file_extension === 'txt') {
+            // Read text directly from a .txt file
+            $file_text = file_get_contents('C:/xampp/htdocs/plagiarism/Database/'.$file_name);
+        } else {
+            // Handle unsupported file type
+        }
+
+        $api = shell_exec("python $path \"$file_text\" 2>&1");
 
         if ($api !== null) {
             $json_data = json_decode($api, true);
@@ -22,6 +36,8 @@ if(isset($_POST["submit"])) {
     }
 }
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -57,12 +73,12 @@ if(isset($_POST["submit"])) {
 			  <thead style="position: sticky;top: 0" class="bg-danger text-light">
 				<tr>
 				<th colspan="2" class="text-center"> 
-				<h1>PLAGIARISM REPORT</h1>
+				<h1>PLAGIARISM REPORT AND SIMIlARITY PERCENTAGE </h1>
 				</th>
 				</tr>
 				<tr>
 				  <th scope="col" width="40%"><h2>File Name</h2></th>
-				  <th scope="col" width="60%"><h2>Percantage</h2></th>
+				  <th scope="col" width="60%"><h2>Percentage</h2></th>
 				</tr>
 			  <thead>
 			  <tbody

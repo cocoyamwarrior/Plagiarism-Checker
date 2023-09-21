@@ -7,8 +7,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 # Assuming the text files are in the 'C:/xampp/htdocs/plagiarism/' directory
-student_files = [doc for doc in os.listdir('C:/xampp/htdocs/plagiarism/') if doc.endswith('.txt')]
-student_notes = [open(os.path.join('C:/xampp/htdocs/plagiarism/', _file), encoding='utf-8').read()
+student_files = [doc for doc in os.listdir('C:/xampp/htdocs/plagiarism/Database') if doc.endswith('.txt')]
+student_notes = [open(os.path.join('C:/xampp/htdocs/plagiarism/Database', _file), encoding='utf-8').read()
                  for _file in student_files]
 
 def vectorize(Text): return TfidfVectorizer().fit_transform(Text).toarray()
