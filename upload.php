@@ -5,24 +5,13 @@ if(isset($_POST["submit"])) {
 
     if ($file_tmp !== false) {
         // Change the upload directory to 'Database/'
-        move_uploaded_file($file_tmp, 'C:/xampp/htdocs/plagiarism/Database/' . $file_name);
+        $target_path = 'C:/xampp/htdocs/plagiarism/Database/' . $file_name;
+        move_uploaded_file($file_tmp, $target_path);
 
         $path = "C:/xampp/htdocs/plagiarism/sss.py";
 
-        $file_extension = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-        $file_text = "";
-
-        if ($file_extension === 'pdf') {
-            $command = "pdftotext -layout C:/xampp/htdocs/plagiarism/Database/$file_name -";
-            $file_text = shell_exec($command);
-        } elseif ($file_extension === 'txt') {
-            // Read text directly from a .txt file
-            $file_text = file_get_contents('C:/xampp/htdocs/plagiarism/Database/'.$file_name);
-        } else {
-            // Handle unsupported file type
-        }
-
-        $api = shell_exec("python $path \"$file_text\" 2>&1");
+        // Pass the file path to the Python script
+        $api = shell_exec("python $path \"$target_path\" 2>&1");
 
         if ($api !== null) {
             $json_data = json_decode($api, true);
@@ -36,7 +25,6 @@ if(isset($_POST["submit"])) {
     }
 }
 ?>
-
 
 
 <!DOCTYPE html>
